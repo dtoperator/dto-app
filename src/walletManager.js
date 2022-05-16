@@ -1,9 +1,10 @@
 const ethers = require('ethers');
+const dtoAbi = require('./abi/DTO.json');
 
 const TESTNET = {
     method: 'wallet_addEthereumChain',
     params: [{
-        chainId: '0x3'
+        chainId: '0x4'
     }]
 };
 
@@ -24,7 +25,7 @@ class _walletManager {
     web3Global = false;
     ethers = ethers;
 
-    dtoAddr = "0x0000000000000000000000000000000000000000";
+    dtoAddr = "0x7fE96348FCaa539824438785de130bd31d3c2062";
 
     constructor() {
         this.connectToMetamask();
@@ -56,7 +57,7 @@ class _walletManager {
             await window.ethereum.request({
                 method: 'wallet_switchEthereumChain',
                 // params: [{ chainId: '0x1' }], // Ethereum Mainnet
-                params: [{ chainId: '0x3' }], // Ethereum Testnet
+                params: [{ chainId: '0x4' }], // Rinkeby Testnet
             }).catch((error) => {
                 this.walletStatus = false;
                 err = error;
@@ -67,8 +68,8 @@ class _walletManager {
     }
 
     async connectToContract() {
-        if (!this.nft) {
-            this.nft = new ethers.Contract(this.dtoAddr, dtoAbi.abi, this.web3Global);
+        if (!this.dto) {
+            this.dto = new ethers.Contract(this.dtoAddr, dtoAbi.abi, this.web3Global);
         }
     }
 

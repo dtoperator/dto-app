@@ -1,32 +1,37 @@
 <template>
     <div class="home">
-        <h1>DTO App</h1>
+        <h1>
+            <a href="https://dto.tech">
+                <img src="/img/dto-logo.png" width="300" />
+            </a>
+        </h1>
         <div class="phone">
-            <div v-if="screen == 'numpad'">
-                <div class="number">
-                    <p v-if="number.length > 0">DTO</p>
-                    <input v-model="number" type="number" />
-                    <button v-if="number.length > 0" @click="del()">
-                        <img src="/img/delete.svg" alt="Delete" />
-                    </button>
-                </div>
-                <div class="digits">
-                    <button @click="numpad(1)">1</button>
-                    <button @click="numpad(2)">2</button>
-                    <button @click="numpad(3)">3</button>
-                    <button @click="numpad(4)">4</button>
-                    <button @click="numpad(5)">5</button>
-                    <button @click="numpad(6)">6</button>
-                    <button @click="numpad(7)">7</button>
-                    <button @click="numpad(8)">8</button>
-                    <button @click="numpad(9)">9</button>
-                    <button>*</button>
-                    <button @click="numpad(0)">0</button>
-                    <button>#</button>
-                </div>
-                <div class="pick">
-                    <button v-if="number.length > 0">Pick</button>
-                </div>
+            <div class="number">
+                <p v-if="number.length > 0">DTO</p>
+                <input v-model="number" type="number" />
+                <button v-if="number.length > 0" @click="del()">
+                    <img src="/img/delete.svg" alt="Delete" />
+                </button>
+            </div>
+            <div class="error">
+                <p v-if="error">This number is taken</p>
+            </div>
+            <div class="digits">
+                <button @click="numpad(1)">1</button>
+                <button @click="numpad(2)">2</button>
+                <button @click="numpad(3)">3</button>
+                <button @click="numpad(4)">4</button>
+                <button @click="numpad(5)">5</button>
+                <button @click="numpad(6)">6</button>
+                <button @click="numpad(7)">7</button>
+                <button @click="numpad(8)">8</button>
+                <button @click="numpad(9)">9</button>
+                <button>*</button>
+                <button @click="numpad(0)">0</button>
+                <button>#</button>
+            </div>
+            <div class="pick">
+                <button v-if="number.length > 0" @click="pickNumber()">Pick</button>
             </div>
         </div>
     </div>
@@ -38,16 +43,23 @@ export default {
     data() {
         return {
             number: "",
-            screen: "numpad",
+            prefix: "10000000",
+            error: false
+        }
+    },
+    computed: {
+        prefixNumber() {
+            return this.walletManager.ethers.BigNumber.from(this.prefix + this.number);
         }
     },
     watch: {
         number: function (val) {
             if (val.length > 10) {
-                this.number = val.slice(0, -(val.length - 10))
+                this.number = val.slice(0, -(val.length - 10));
             } else {
-                this.number = val
+                this.number = val;
             }
+            this.error = false;
         }
     },
     methods: {
@@ -56,6 +68,37 @@ export default {
         },
         del() {
             this.number = this.number.slice(0, -1);
+        },
+        async checkNumber() {
+            try {
+                await this.walletManager.dto.ownerOf(this.prefixNumber);
+                this.error = true;
+                return false
+            } catch (e) {
+                return true
+            }
+        },
+        async pickNumber() {
+            let signer = await this.walletManager.web3Global.getSigner();
+            let dtoSigner = this.walletManager.dto.connect(signer);
+
+            if (await this.checkNumber()) {
+                try {
+                    await dtoSigner
+                        .registerNumber(
+                            this.prefixNumber,
+                            31536000,
+                            {
+                                value: this.walletManager.ethers.utils.parseUnits((100).toString(), 'finney'),
+                                gasLimit: 250000
+                            }
+                        );
+                } catch (e) {
+                    console.log(e);
+                }
+            } else {
+                console.log("This number is taken");
+            }
         }
     },
 };
@@ -101,8 +144,9 @@ h1 {
 .number > p {
     color: black;
     font-weight: 300;
-    font-size: 32px;
-    line-height: 38px;
+    font-size: 26px;
+    line-height: 50px;
+    margin-right: 5px;
 }
 
 .number > input {
@@ -111,7 +155,7 @@ h1 {
     color: black;
     font-family: 'Montserrat', sans-serif;
     font-weight: 300;
-    font-size: 32px;
+    font-size: 26px;
     line-height: 38px;
     width: 190px;
 }
@@ -142,6 +186,13 @@ h1 {
     color: black;
 }
 
+.error {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    min-height: 51px;
+}
+
 .digits {
     display: flex;
     justify-content: center;
@@ -163,10 +214,6 @@ h1 {
 
 .digits > button:hover {
     cursor: pointer;
-}
-
-.digits > button:active {
-    /* background-color: rgba(0, 0, 0, 0.05); */
 }
 
 .digits > button:nth-child(10) {
