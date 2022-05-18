@@ -105,6 +105,20 @@ export default {
 </script>
 
 <style scoped>
+@media only screen and (min-height: 639px) {
+    .phone {
+        min-height: 640px !important;
+    }
+
+    .number {
+        margin-bottom: 75px;
+    }
+
+    .pick {
+        margin-bottom: 44px;
+    }
+}
+
 h1 {
     color: black;
     font-weight: 300;
@@ -128,8 +142,7 @@ h1 {
     box-shadow: 0px 9px 12px rgba(0, 0, 0, 0.44), 0px 1722px 482px rgba(255, 255, 255, 0.01), 0px 1102px 441px rgba(255, 255, 255, 0.04), 0px 620px 372px rgba(255, 255, 255, 0.15), 0px 276px 276px rgba(255, 255, 255, 0.26), 0px 13px 152px rgba(255, 255, 255, 0.29);
     border-radius: 24px 24px 0 0;
     width: 360px;
-    /* min-height: 711px; */
-    min-height: 640px;
+    min-height: 596px;
 }
 
 .number {
@@ -137,7 +150,6 @@ h1 {
     flex-direction: row;
     justify-content: center;
     margin-top: 77px;
-    margin-bottom: 75px;
     min-height: 102px;
 }
 
@@ -225,7 +237,6 @@ h1 {
     flex-direction: row;
     justify-content: center;
     min-height: 46px;
-    margin-bottom: 44px;
 }
 
 .pick > button {
