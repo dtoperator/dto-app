@@ -4,16 +4,35 @@ const dtoAbi = require('./abi/DTO.json');
 const TESTNET = {
     method: 'wallet_addEthereumChain',
     params: [{
-        chainId: '0x4'
+        chainId: '0x4',
+        chainName: 'Rinkeby Test Network',
+        nativeCurrency: {
+            name: 'Ethereum',
+            symbol: 'ETH',
+            decimals: 18
+        },
+        // rpcUrls: [''],
+        blockExplorerUrls: ['https://rinkeby.etherscan.io']
     }]
 };
 
 const MAINNET = {
     method: 'wallet_addEthereumChain',
     params: [{
-        chainId: '0x1'
+        chainId: '0x1',
+        chainName: 'Ethereum Mainnet',
+        nativeCurrency: {
+            name: 'Ethereum',
+            symbol: 'ETH',
+            decimals: 18
+        },
+        // rpcUrls: [''],
+        blockExplorerUrls: ['https://etherscan.io']
     }]
 }
+
+const NETWORK = TESTNET;
+// const NETWORK = MAINNET;
 
 class _walletManager {
     // status
@@ -25,7 +44,7 @@ class _walletManager {
     web3Global = false;
     ethers = ethers;
 
-    dtoAddr = "0x7fE96348FCaa539824438785de130bd31d3c2062";
+    dtoAddr = "0xe998bAF3e3c2f02ce06ECA740DBd121e51AD1879";
 
     constructor() {
         this.connectToMetamask();
@@ -44,20 +63,19 @@ class _walletManager {
                 err = error;
             }
         } else {
-            // this.web3Global = new ethers.providers.JsonRpcProvider(MAINNET.params[0].rpcUrls[0]);
+            this.web3Global = new ethers.providers.JsonRpcProvider(NETWORK.params[0].rpcUrls[0]);
             err = "Metamask not found!";
         }
 
         if (window.ethereum) {
-            await window.ethereum.request(MAINNET).catch((error) => {
-                this.walletStatus = false;
-                err = error;
-            });
+            // await window.ethereum.request(NETWORK).catch((error) => {
+            //     this.walletStatus = false;
+            //     err = error;
+            // });
 
             await window.ethereum.request({
                 method: 'wallet_switchEthereumChain',
-                // params: [{ chainId: '0x1' }], // Ethereum Mainnet
-                params: [{ chainId: '0x4' }], // Rinkeby Testnet
+                params: [{ chainId: NETWORK.params[0].chainId }]
             }).catch((error) => {
                 this.walletStatus = false;
                 err = error;
@@ -75,7 +93,7 @@ class _walletManager {
 
     async checkId() {
         let network = await this.web3Global.getNetwork();
-        if (network.chainId != MAINNET.params[0].chainId) {
+        if (network.chainId != NETWORK.params[0].chainId) {
             await this.connectToMetamask();
         }
     }

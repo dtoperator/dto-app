@@ -31,7 +31,8 @@
                 <button>#</button>
             </div>
             <div class="pick">
-                <button v-if="number.length > 0" @click="pickNumber()">Pick</button>
+                <button v-if="number.length > 0 && walletStatus" @click="pickNumber()">Pick</button>
+                <button v-else @click="connect()">Connect Wallet</button>
             </div>
         </div>
     </div>
@@ -42,10 +43,16 @@ export default {
     name: "Home",
     data() {
         return {
+            walletStatus: false,
             number: "",
             prefix: "10000000",
             error: false
         }
+    },
+    mounted() {
+        setInterval(async () => {
+            this.walletStatus = this.walletManager.walletStatus;
+        }, 100);
     },
     computed: {
         prefixNumber() {
@@ -68,6 +75,12 @@ export default {
         },
         del() {
             this.number = this.number.slice(0, -1);
+        },
+        async connect() {
+            let err = await this.walletManager.connectToMetamask();
+            if (err != "") {
+                window.location = "https://metamask.app.link/dapp/nft-meetup-example.github.io";
+            }
         },
         async checkNumber() {
             try {
