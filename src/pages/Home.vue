@@ -32,7 +32,7 @@
             </div>
             <div class="pick">
                 <button v-if="number.length > 0 && walletStatus" @click="pickNumber()">Pick</button>
-                <button v-else @click="connect()">Connect Wallet</button>
+                <button v-else-if="!walletStatus" @click="connect()">Connect Wallet</button>
             </div>
         </div>
     </div>
