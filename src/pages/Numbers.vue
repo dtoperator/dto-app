@@ -78,14 +78,14 @@ a {
     flex-direction: column;
     box-shadow: 0px 9px 12px rgba(0, 0, 0, 0.44), 0px 1722px 482px rgba(255, 255, 255, 0.01), 0px 1102px 441px rgba(255, 255, 255, 0.04), 0px 620px 372px rgba(255, 255, 255, 0.15), 0px 276px 276px rgba(255, 255, 255, 0.26), 0px 13px 152px rgba(255, 255, 255, 0.29);
     color: #5f40e6;
+    border-radius: 12px;
+    overflow: hidden;
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 300;
     font-size: 18px;
     line-height: 22px;
     text-decoration: none;
     width: 300px;
-    margin-right: 20px;
-    margin-bottom: 20px; 
 }
 
 a > img {
@@ -99,9 +99,9 @@ a > p {
 }
 
 .numbers {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 300px);
+    grid-gap: 2rem;
+    justify-content: center;
 }
 </style>

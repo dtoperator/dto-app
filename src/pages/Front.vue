@@ -76,6 +76,36 @@ export default {
 </script>
 
 <style scoped>
+@media only screen and (max-width: 1024px) {
+    .menu > a {
+        font-size: 20px !important;
+        line-height: 32px !important;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    main {
+        flex-direction: column !important;
+    }
+
+    main > div:nth-child(2) {
+        width: 100% !important;
+    }
+
+    .menu {
+        flex-direction: row !important;
+        justify-content: space-between;
+        width: 100% !important;
+        margin-bottom: 20px;
+    }
+}
+
+@media only screen and (max-width: 425px) {
+    .menu > a > div {
+        display: none;
+    }
+}
+
 header {
     background-color: #5f40e6;
     display: flex;
