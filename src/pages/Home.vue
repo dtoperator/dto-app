@@ -3,7 +3,7 @@
         <div class="phone">
             <div class="number">
                 <p v-if="number.length > 0">DTO</p>
-                <input v-model="number" type="number" />
+                <input v-model="number" id="number" type="number" autofocus />
                 <button v-if="number.length > 0" @click="del()">
                     <img src="/img/delete.svg" alt="Delete" />
                 </button>
@@ -67,6 +67,7 @@ export default {
     methods: {
         numpad(num) {
             this.number = this.number + num;
+            document.getElementById('number').focus();
         },
         del() {
             this.number = this.number.slice(0, -1);
@@ -172,6 +173,7 @@ export default {
     font-size: 26px;
     line-height: 38px;
     width: 190px;
+    outline: none;
 }
 
 /* Chrome, Safari, Edge, Opera */
