@@ -41,6 +41,7 @@ export default {
     data() {
         return {
             walletStatus: false,
+            isAddrReceived: false,
             walletAddr: '',
         }
     },
@@ -50,7 +51,8 @@ export default {
     mounted() {
         setInterval(async () => {
             this.walletStatus = this.walletManager.walletStatus;
-            if (this.walletStatus) {
+            if (this.walletStatus && !this.isAddrReceived) {
+                this.isAddrReceived = true;
                 this.getAddr();
             }
         }, 100);
