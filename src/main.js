@@ -9,7 +9,7 @@ Vue.router = router;
 Vue.use(VueRouter);
 Vue.use(walletManager);
 
-if (window.location.href.indexOf('app.dto.tech') > -1 || window.location.href.indexOf('ost:') > -1)
+if (window.location.href.indexOf('app.dto.tech') > -1 || window.location.href.indexOf('dto-app.pages.dev') > -1 || window.location.href.indexOf('ost:') > -1)
     new Vue({
         render: h => h(Index),
         el: '#app',

@@ -1,14 +1,9 @@
 <template>
     <div class="home">
-        <h1>
-            <a href="https://dto.tech">
-                <img src="/img/dto-logo.png" width="300" />
-            </a>
-        </h1>
         <div class="phone">
             <div class="number">
                 <p v-if="number.length > 0">DTO</p>
-                <input v-model="number" type="number" />
+                <input v-model="number" id="number" type="number" autofocus />
                 <button v-if="number.length > 0" @click="del()">
                     <img src="/img/delete.svg" alt="Delete" />
                 </button>
@@ -72,6 +67,7 @@ export default {
     methods: {
         numpad(num) {
             this.number = this.number + num;
+            document.getElementById('number').focus();
         },
         del() {
             this.number = this.number.slice(0, -1);
@@ -97,7 +93,7 @@ export default {
 
             if (await this.checkNumber()) {
                 try {
-                    await dtoSigner
+                    const tx = await dtoSigner
                         .registerNumber(
                             this.prefixNumber,
                             31536000,
@@ -106,6 +102,8 @@ export default {
                                 gasLimit: 250000
                             }
                         );
+
+                    this.$router.push({ name: "broadcast", params: { hash: tx.hash } });
                 } catch (e) {
                     console.log(e);
                 }
@@ -132,28 +130,20 @@ export default {
     }
 }
 
-h1 {
-    color: black;
-    font-weight: 300;
-    font-size: 60px;
-    line-height: 70px;
-}
-
 .home {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     align-items: center;
-    min-height: 100vh;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
 }
 
 .phone {
-    background: rgb(255,255,255);
-    background: linear-gradient(134deg, rgba(255,255,255,1) 0%, rgba(192,192,192,1) 100%);
+    background: white;
     border-bottom: none;
     box-shadow: 0px 9px 12px rgba(0, 0, 0, 0.44), 0px 1722px 482px rgba(255, 255, 255, 0.01), 0px 1102px 441px rgba(255, 255, 255, 0.04), 0px 620px 372px rgba(255, 255, 255, 0.15), 0px 276px 276px rgba(255, 255, 255, 0.26), 0px 13px 152px rgba(255, 255, 255, 0.29);
-    border-radius: 24px 24px 0 0;
+    border: 3px solid #4c4c4c;
+    border-radius: 24px;
     width: 360px;
     min-height: 596px;
 }
@@ -178,11 +168,12 @@ h1 {
     background-color: rgba(255, 255, 255, 0);
     border: 0;
     color: black;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 300;
     font-size: 26px;
     line-height: 38px;
     width: 190px;
+    outline: none;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -231,7 +222,7 @@ h1 {
     border: 0;
     width: 100px;
     height: 60px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 300;
     font-size: 44px;
     line-height: 52px;
@@ -253,13 +244,12 @@ h1 {
 }
 
 .pick > button {
-    background: rgb(255,112,174);
-    background: linear-gradient(90deg, rgba(255,112,174,1) 0%, rgba(183,55,236,1) 50%, rgba(93,92,226,1) 100%);
+    background: #5f40e6;
     color: white;
     border: none;
     box-sizing: border-box;
     border-radius: 30px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 300;
     font-size: 24px;
     line-height: 28px;

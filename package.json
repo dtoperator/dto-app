@@ -1,6 +1,6 @@
 {
-  "name": "dto-registration-app",
-  "version": "1.0.0",
+  "name": "dto-app",
+  "version": "2.0.0",
   "description": "DTO registration web application",
   "scripts": {
     "serve": "vue-cli-service serve",

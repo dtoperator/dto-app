@@ -57,7 +57,7 @@ class _walletManager {
         if (window.ethereum) {
             this.web3Global = new ethers.providers.Web3Provider(window.ethereum);
             try {
-                await window.ethereum.enable();
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
                 this.walletStatus = true;
             } catch (error) {
                 err = error;
